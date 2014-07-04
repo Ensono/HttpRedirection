@@ -1,14 +1,29 @@
 function Trace-HttpRedirect {
+  [CmdletBinding()]
   param(
-    [Uri]$Uri
+    [Parameter(Mandatory=$True, Position=1)]
+    [Uri]$Uri,
+    [Parameter(Mandatory=$False, Position=2)]
+    [int]$MaximumRedirection = 30
   )
   process {
-    $redirect = Invoke-WebRequest -Uri $Uri -MaximumRedirection 0;
-    $redirectObject = New-Object PSObject;
-    $redirectObject | Add-Member -MemberType NoteProperty -Name "Redirect" -Value 1;
-    $redirectObject | Add-Member -MemberType NoteProperty -Name "StatusCode" -Value 200;
-    $redirectObject | Add-Member -MemberType NoteProperty -Name "StatusDescription" -Value "OK";
+    for ($redirect = 1; $redirect -le $MaximumRedirection; $redirect++) {
+      $result = Invoke-WebRequest -Uri $Uri -MaximumRedirection 0 -ErrorAction SilentlyContinue;
+      $redirectObject = New-Object PSObject;
+      $redirectObject | Add-Member -MemberType NoteProperty -Name "Redirect" -Value $redirect;
+      $redirectObject | Add-Member -MemberType NoteProperty -Name "StatusCode" -Value $result.StatusCode;
+      $redirectObject | Add-Member -MemberType NoteProperty -Name "StatusDescription" -Value $result.StatusDescription;
 
-    $redirectObject;
+      if ($result.Headers -And $result.Headers.ContainsKey("Location")) {
+        $Uri = $result.Headers["Location"];
+        $redirectObject | Add-Member -MemberType NoteProperty -Name "Location" -Value $Uri;
+      }
+
+      $redirectObject;
+
+      if ($result.StatusCode -eq 200) {
+        return;
+      }
+    }
   }
 }
