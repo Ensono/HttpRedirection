@@ -4,11 +4,18 @@ function Trace-HttpRedirect {
     [Parameter(Mandatory=$True, Position=1)]
     [Uri]$Uri,
     [Parameter(Mandatory=$False, Position=2)]
-    [int]$MaximumRedirection = 30
+    [int]$MaximumRedirection = 5,
+    [switch]$ForceGet
   )
   process {
     for ($redirect = 1; $redirect -le $MaximumRedirection; $redirect++) {
-      $result = Invoke-WebRequest -Uri $Uri -MaximumRedirection 0 -ErrorAction SilentlyContinue;
+      if ($ForceGet) {
+        $method = "GET";
+      } else {
+        $method = "HEAD";
+      }
+
+      $result = Invoke-WebRequest -Uri $Uri -MaximumRedirection 0 -ErrorAction SilentlyContinue -Method $method;
       $redirectObject = New-Object PSObject;
       $redirectObject | Add-Member -MemberType NoteProperty -Name "Redirect" -Value $redirect;
       $redirectObject | Add-Member -MemberType NoteProperty -Name "StatusCode" -Value $result.StatusCode;
@@ -21,8 +28,12 @@ function Trace-HttpRedirect {
 
       $redirectObject;
 
-      if ($result.StatusCode -eq 200) {
-        return;
+      if (-Not ($result.Headers)) {
+        return; # no headers; ergo we have no Location header.
+      }
+
+      if (-Not ($result.Headers.ContainsKey("Location"))) {
+        return; # no Location header so this is the end of the line.
       }
     }
   }
