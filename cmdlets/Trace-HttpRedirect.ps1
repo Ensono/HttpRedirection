@@ -17,6 +17,7 @@ function Trace-HttpRedirect {
 
       $result = Invoke-WebRequest -Uri $Uri -MaximumRedirection 0 -ErrorAction SilentlyContinue -Method $method;
       $redirectObject = New-Object PSObject;
+      $redirectObject.PSObject.TypeNames.Insert(0, "HttpRedirection.RedirectResult")
       $redirectObject | Add-Member -MemberType NoteProperty -Name "Redirect" -Value $redirect;
       $redirectObject | Add-Member -MemberType NoteProperty -Name "StatusCode" -Value $result.StatusCode;
       $redirectObject | Add-Member -MemberType NoteProperty -Name "StatusDescription" -Value $result.StatusDescription;
