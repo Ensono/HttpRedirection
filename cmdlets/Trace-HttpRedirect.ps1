@@ -1,3 +1,4 @@
+<# .ExternalHelp ../help/HttpRedirection.Test-HttpRedirect.xml #>
 function Trace-HttpRedirect {
   [CmdletBinding()]
   param(

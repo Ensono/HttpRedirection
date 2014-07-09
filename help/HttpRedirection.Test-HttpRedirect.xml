@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<helpItems schema="maml">
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+    <command:details>
+      <command:name>Trace-HttpRedirect</command:name>
+      <maml:description>
+        <maml:para>Traces the HTTP redirects, 3xx Status Codes, that a HTTP client would follow upon requesting a URI.</maml:para>
+      </maml:description>
+      <maml:copyright>
+        <maml:para />
+      </maml:copyright>
+      <command:verb>Trace</command:verb>
+      <command:noun>HttpRedirect</command:noun>
+      <dev:version />
+    </command:details>
+    <maml:description>
+      <maml:para>Upon calling Trace-HttpRedirect an HTTP request will be made to the Uniform Resource Indicator, URI, specified at the command line. The HTTP response from this call will be inspected and if a Location header specified it will be followed up to the defailt maximum redirection.</maml:para>
+      <maml:para>By default Trace-HttpRedirect will use the HTTP HEAD method for each request, by specifying the -ForceGet parameter the GET method will be used. This, however, will be at the cost of additional network traffic required to download the body of remote resources.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <command:name>Trace-HttpRedirect</command:name>
+        <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" postion="0">
+          <maml:name>Uri</maml:name>
+          <maml:description>
+            <maml:para>The URI that will be used to make the initial request.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Uri</command:parameterValue>
+        </command:parameter>
+        <command:name>Trace-HttpRedirect</command:name>
+        <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" postion="0">
+          <maml:name>MaximumRedirection</maml:name>
+          <maml:description>
+            <maml:para>The maximum number of HTTP requests to make before aborting and returning control to the caller.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
+        </command:parameter>
+        <command:name>Trace-HttpRedirect</command:name>
+        <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" postion="0">
+          <maml:name>ForceGet</maml:name>
+          <maml:description>
+            <maml:para>Forces the use of the HTTP GET method rathar than HTTP HEAD.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        </command:parameter>
+        <command:name>Trace-HttpRedirect</command:name>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false (ByValue)" position="0">
+        <maml:name>Uri</maml:name>
+        <maml:description>
+          <maml:para>The URI that will be used to make the initial request.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Uri</command:parameterValue>
+        <dev:type>
+          <maml:name>Uri</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false (ByValue)" position="0">
+        <maml:name>MaximumRedirection</maml:name>
+        <maml:description>
+          <maml:para>The maximum number of HTTP requests to make before aborting and returning control to the caller.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false (ByValue)" position="0">
+        <maml:name>ForceGet</maml:name>
+        <maml:description>
+            <maml:para>Forces the use of the HTTP GET method rathar than HTTP HEAD.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue />
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>URI</maml:name>
+          <maml:uri />
+          <maml:description>
+            <maml:para>Standard System.Uri, can be piped into this cmdlet 
+          </maml:description>
+        </dev:type>
+        <maml:description />
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>HttpRedirection.RedirectResult</maml:name>
+          <maml:uri />
+          <maml:description>
+            <maml:para>Custom type used for presentation of HTTP Redirect Results.</maml:para>
+          </maml:description>
+        </dev:type>
+        <maml:description />
+      </command:returnValue>
+    </command:returnValues>
+    <command:terminatingErrors />
+    <command:nonTerminatingErrors />
+    <maml:alertSet>
+      <maml:title />
+      <maml:alert>
+        <maml:para />
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>--------------  EXAMPLE 1 --------------</maml:title>
+        <maml:introduction>
+          <maml:para>C:\PS&gt; Trace-HttpRedirect http://www.google.com</maml:para>
+        </maml:introduction>
+        <dev:code>Redirect Code Description          Target URL
+-------- ---- -----------          ----------
+       1  302 Found                http://www.google.co.uk/?gfe_rd=cr&amp;ei=Um29U6zOI6HR8gfCrICICg
+       2  200 OK</dev:code>
+        <dev:remarks>
+          <maml:para>This command will perform a request to the target URI which, if you are in the United Kingdom will redirect to the Google UK homepage.</maml:para>
+        </dev:remarks>
+        <command:commandLines>
+          <command:commandLine>
+            <command:commandText />
+          </command:commandLine>
+        </command:commandLines>
+      </command:example>
+      <command:example>
+        <maml:title>--------------  EXAMPLE 2 --------------</maml:title>
+        <maml:introduction>
+          <maml:para>C:\PS&gt; Trace-HttpRedirect http://www.amido.co.uk -ForceGet</maml:para>
+        </maml:introduction>
+        <dev:code>Redirect Code Description          Target URL
+-------- ---- -----------          ----------
+       1  301 Moved Permanently    http://www.amido.com/
+       2  200 OK</dev:code>
+        <dev:remarks>
+          <maml:para>This command will perform a request to the target URI using the HTTP GET method rather than HTTP HEAD. This will redirect to the Amido homepage on the .com domain.</maml:para>
+        </dev:remarks>
+        <command:commandLines>
+          <command:commandLine>
+            <command:commandText />
+          </command:commandLine>
+        </command:commandLines>
+      </command:example>
+    </command:examples>
+    <maml:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Trace-HttpRedirect</maml:linkText>
+        <maml:uri />
+      </maml:navigationLink>
+    </maml:relatedLinks>
+  </command:command>
+</helpItems>

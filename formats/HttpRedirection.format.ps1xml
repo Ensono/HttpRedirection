@@ -9,7 +9,7 @@
   </SelectionSets>
   <ViewDefinitions>
     <View>
-      <Name>HttpRedirection</Name>
+      <Name>HttpRedirectionTable</Name>
       <ViewSelectedBy>
         <SelectionSetName>HttpRedirectionCustomObject</SelectionSetName>
       </ViewSelectedBy>
@@ -54,6 +54,39 @@
           </TableRowEntry>
         </TableRowEntries>
       </TableControl>
+    </View>
+    <View>
+      <Name>HttpRedirectionList</Name>
+      <ViewSelectedBy>
+        <SelectionSetName>HttpRedirectionCustomObject</SelectionSetName>
+      </ViewSelectedBy>
+      <ListControl>
+        <ListEntries>
+          <ListEntry>
+            <ListItems>
+              <ListItem>
+                <Label>Redirect Number</Label>
+                <PropertyName>Redirect</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>HTTP Status Code</Label>
+                <PropertyName>StatusCode</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>HTTP Status</Label>
+                <PropertyName>StatusDescription</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Redirect Location</Label>
+                <PropertyName>Location</PropertyName>
+                <ItemSelectionCondition>
+                  <PropertyName>Location</PropertyName>
+                </ItemSelectionCondition>
+              </ListItem>
+            </ListItems>
+          </ListEntry>
+        </ListEntries>
+      </ListControl>
     </View>
   </ViewDefinitions>
 </Configuration>
