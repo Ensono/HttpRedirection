@@ -1,7 +1,9 @@
-HttpRedirection
-===============
+HTTP Redirection
+================
 
-A PowerShell HTTP Redirection module, designed to aid in diagnosis of redirection errors and web performance.
+![HTTP Redirection](images/logo.png)
+
+Designed to aid in diagnosis of redirection errors and web performance.
 
 Installing
 ----------
