@@ -19,23 +19,20 @@
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
-        <command:name>Trace-HttpRedirect</command:name>
-        <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" postion="0">
+        <command:parameter require="true" variableLength="false" globbing="false" pipelineInput="false" postion="1">
           <maml:name>Uri</maml:name>
           <maml:description>
             <maml:para>The URI that will be used to make the initial request.</maml:para>
           </maml:description>
-          <command:parameterValue required="false" variableLength="false">Uri</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">Uri</command:parameterValue>
         </command:parameter>
-        <command:name>Trace-HttpRedirect</command:name>
-        <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" postion="0">
+        <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" postion="2">
           <maml:name>MaximumRedirection</maml:name>
           <maml:description>
             <maml:para>The maximum number of HTTP requests to make before aborting and returning control to the caller.</maml:para>
           </maml:description>
           <command:parameterValue required="false" variableLength="false">Int32</command:parameterValue>
         </command:parameter>
-        <command:name>Trace-HttpRedirect</command:name>
         <command:parameter require="false" variableLength="false" globbing="false" pipelineInput="false" postion="0">
           <maml:name>ForceGet</maml:name>
           <maml:description>
@@ -90,7 +87,7 @@
           <maml:name>URI</maml:name>
           <maml:uri />
           <maml:description>
-            <maml:para>Standard System.Uri, can be piped into this cmdlet 
+            <maml:para>Standard System.Uri, can be piped into this cmdlet</maml:para> 
           </maml:description>
         </dev:type>
         <maml:description />
@@ -122,7 +119,8 @@
         <maml:introduction>
           <maml:para>C:\PS&gt; Trace-HttpRedirect http://www.google.com</maml:para>
         </maml:introduction>
-        <dev:code>Redirect Code Description          Target URL
+        <dev:code>
+Redirect Code Description          Target URL
 -------- ---- -----------          ----------
        1  302 Found                http://www.google.co.uk/?gfe_rd=cr&amp;ei=Um29U6zOI6HR8gfCrICICg
        2  200 OK</dev:code>
@@ -140,7 +138,8 @@
         <maml:introduction>
           <maml:para>C:\PS&gt; Trace-HttpRedirect http://www.amido.co.uk -ForceGet</maml:para>
         </maml:introduction>
-        <dev:code>Redirect Code Description          Target URL
+        <dev:code>
+Redirect Code Description          Target URL
 -------- ---- -----------          ----------
        1  301 Moved Permanently    http://www.amido.com/
        2  200 OK</dev:code>
