@@ -13,8 +13,8 @@ Describe "Trace-HttpRedirect Contains Appropiate Help" {
   }
 
   It "contains two examples" {
-    $help = Get-Help Trace-HttpRedirect;
-    $help.Examples.examples | Measure-Object | Select-Object -ExpandProperty Count | Should Be 2;
+    $help = Get-Help Trace-HttpRedirect -Examples;
+    $help.examples.example.Count | Should Be 2;
   }
 
   It "does not contain any TODO items in parameters" {
@@ -22,8 +22,8 @@ Describe "Trace-HttpRedirect Contains Appropiate Help" {
     $help.Parameters | Out-String -Stream | Select-String "TODO" | Measure-Object | Select-Object -ExpandProperty Count | Should Be 0;
   }
 
-  It "contains twelve parameters" {
+  It "contains three parameters" {
     $help = Get-Help Trace-HttpRedirect;
-    $help.Parameters.parameters | Measure-Object | Select-Object -ExpandProperty Count | Should Be 3;
+    $help.Parameters.parameter.Count | Should Be 3;
   }
 }
