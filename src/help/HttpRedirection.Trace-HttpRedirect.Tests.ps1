@@ -1,5 +1,6 @@
 ﻿$here = Split-Path -Parent $MyInvocation.MyCommand.Path;
-. "$here\..\cmdlets\Trace-HttpRedirect.ps1";
+Get-Module HttpRedirection | Remove-Module -Force;
+Import-Module "$here\..\HttpRedirection.psd1";
 
 Describe "Trace-HttpRedirect Contains Appropiate Help" {
 	It "does not contain any TODO items in basic help" {
@@ -27,3 +28,5 @@ Describe "Trace-HttpRedirect Contains Appropiate Help" {
     $help.Parameters.parameter.Count | Should Be 3;
   }
 }
+
+Get-Module HttpRedirection | Remove-Module -Force;

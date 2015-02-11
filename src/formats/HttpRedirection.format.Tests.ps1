@@ -1,11 +1,11 @@
 ﻿$here = Split-Path -Parent $MyInvocation.MyCommand.Path;
 . "$here\..\cmdlets\Trace-HttpRedirect.ps1";
-Update-FormatData "$here.\HttpRedirection.format.ps1xml";
+Update-FormatData "$here\HttpRedirection.format.ps1xml";
 
 function Get-Fields ([string[]]$lines) {
   $fields = New-Object System.Collections.Generic.List``1[String];
   $buffer = [String]::Empty;
-  for ($i = 0; $i -le $lines[2].Length; $i++) {
+  for ($i = 0; $i -le ($lines[2].Length - 1); $i++) {
     if ($lines[2][$i] -eq '-') {
       $buffer += [string]$lines[1][$i];
     } else {
