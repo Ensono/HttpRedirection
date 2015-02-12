@@ -29,7 +29,7 @@ function Trace-HttpRedirect {
       $redirectObject | Add-Member -MemberType NoteProperty -Name 'StatusCode' -Value $result.StatusCode;
       $redirectObject | Add-Member -MemberType NoteProperty -Name 'StatusDescription' -Value $result.StatusDescription;
 
-      if ($result.PSObject.Properties['Headers'] -And $result.Headers.ContainsKey('Location')) {
+      if ($result.PSObject.Properties['Headers'] -And ($result.Headers['Location'] -ne $null)) {
         $Uri = $result.Headers['Location'];
         $redirectObject | Add-Member -MemberType NoteProperty -Name 'Location' -Value $Uri;
       }
@@ -40,7 +40,7 @@ function Trace-HttpRedirect {
         return; # no headers; ergo we have no Location header.
       }
 
-      if (-Not ($result.Headers.ContainsKey('Location'))) {
+      if (-Not ($result.Headers['Location'])) {
         return; # no Location header so this is the end of the line.
       }
     }
