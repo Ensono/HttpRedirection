@@ -14,4 +14,5 @@ foreach ($alias in $aliases) { . $alias.FullName }
 Export-ModuleMember -Function * -Alias *
 
 # Win!
-Write-Host -ForegroundColor Green "Module $(Split-Path $PSScriptRoot -Leaf) was successfully loaded."
+Write-Host -ForegroundColor Green "Http Redirection Module was successfully loaded."
+Write-Host -ForegroundColor Green "(c) 2014-$((Get-Date).Year) Amido Limited, All Rights Reserved."
