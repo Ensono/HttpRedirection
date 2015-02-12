@@ -12,6 +12,21 @@ $invokeWebRequestPermanenentRedirectSite = { ($Uri -eq 'http://308.site.test/') 
 $invokeWebRequestInfiniteRedirect = { ($Uri -eq 'http://infinite.site.test/') -And ($MaximumRedirection -eq 0) };
 $invokeWebRequestUsingGetMethod = { ($Uri -eq 'http://final.site.test/') -And ($MaximumRedirection -eq 0) -And ($Method -eq 'GET') };
 
+function New-WebException {
+	param(
+		[String]$Message,
+		[String]$StatusCode,
+		[String]$StatusDescription
+		)
+
+	$ex = New-Object System.Exception -ArgumentList @($Message);
+	$ex | Add-Member -MemberType NoteProperty -Name Response -Value (New-Object PSObject);
+	$ex.Response | Add-Member -MemberType NoteProperty -Name 'StatusCode' -Value $StatusCode;
+	$ex.Response | Add-Member -MemberType NoteProperty -Name 'StatusDescription' -Value $StatusDescription;
+
+	return $ex;
+}
+
 Describe 'Trace-HttpRedirection calls to URL which returns a 200-OK.' {
 	Mock -Verifiable -CommandName Invoke-WebRequest `
 		-ParameterFilter $invokeWebRequestFinalSite `
@@ -307,7 +322,7 @@ Describe 'Trace-HttpRedirect completes after a single call to a terminating endp
 	It 'returns after one call which returns a 404-File Not Found.' {
 		Mock -Verifiable -CommandName Invoke-WebRequest `
 			-ParameterFilter $invokeWebRequestFinalSite `
-			-MockWith { return [String]::Empty | Select-Object @{ Name='StatusCode'; Expression={ '404' } }, @{ Name='StatusDescription'; Expression={ 'File Not Found' } } };
+			-MockWith { throw (New-WebException -Message 'Test WebException' -StatusCode 'NotFound' -StatusDescription 'Not Found' ) };
 
 		$output = Trace-HttpRedirect -Uri 'http://final.site.test/';
 		$output | Measure-Object | Select-Object -ExpandProperty Count | Should Be 1;
