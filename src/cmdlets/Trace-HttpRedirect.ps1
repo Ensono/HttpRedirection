@@ -28,11 +28,13 @@ function Trace-HttpRedirect {
         $Uri = New-Object System.Uri -ArgumentList @($previousUri, $relativeUri);
       }
 
-      try {
-        $result = Invoke-WebRequest -Uri $Uri -MaximumRedirection 0 -ErrorAction SilentlyContinue -Method $method;
-      }
-      catch {
-        $result = $_.Exception.Response;
+      $timings = Measure-Command -Expression {
+        try {
+          $result = Invoke-WebRequest -Uri $Uri -MaximumRedirection 0 -ErrorAction SilentlyContinue -Method $method;
+        }
+        catch {
+          $result = $_.Exception.Response;
+        }
       }
       
       $redirectObject = New-Object PSObject;
@@ -40,6 +42,7 @@ function Trace-HttpRedirect {
       $redirectObject | Add-Member -MemberType NoteProperty -Name 'Redirect' -Value $redirect;
       $redirectObject | Add-Member -MemberType NoteProperty -Name 'StatusCode' -Value $result.StatusCode;
       $redirectObject | Add-Member -MemberType NoteProperty -Name 'StatusDescription' -Value $result.StatusDescription;
+      $redirectObject | Add-Member -MemberType NoteProperty -Name 'Time' -Value $timings;
 
       if ($result.PSObject.Properties['Headers'] -And ($result.Headers['Location'] -ne $null)) {
         $previousUri = $Uri;

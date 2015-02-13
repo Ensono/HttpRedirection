@@ -45,7 +45,13 @@ Describe "Format Trace-HttpRedirect when Target URL returns 200-OK" {
   It "includes Target URL in the output" {
     $output = Trace-HttpRedirect -Uri "http://final.site.test/";
     $lines = $output | Out-String -Stream;
-    (Get-Fields $lines)[3] | Should Be "Target URL";  
+    (Get-Fields $lines)[3] | Should Be "Time";  
+  }
+
+  It "includes Target URL in the output" {
+    $output = Trace-HttpRedirect -Uri "http://final.site.test/";
+    $lines = $output | Out-String -Stream;
+    (Get-Fields $lines)[4] | Should Be "Target URL";  
   }
 
   It "has a Redirect value of 1" {

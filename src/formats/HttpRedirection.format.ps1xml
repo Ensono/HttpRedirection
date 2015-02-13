@@ -31,6 +31,11 @@
             <Alignment>Left</Alignment>
           </TableColumnHeader>
           <TableColumnHeader>
+            <Label>Time</Label>
+            <Width>7</Width>
+            <Alignment>Left</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
             <Label>Target URL</Label>
             <Alignment>Left</Alignment>
           </TableColumnHeader>
@@ -46,6 +51,11 @@
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>StatusDescription</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>
+                  "{0:#}ms" -f $_.Time.TotalMilliseconds
+                </ScriptBlock>
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>Location</PropertyName>
@@ -75,6 +85,12 @@
               <ListItem>
                 <Label>HTTP Status</Label>
                 <PropertyName>StatusDescription</PropertyName>
+              </ListItem>
+              <ListItem>
+                <Label>Time</Label>
+                <ScriptBlock>
+                  "{0:#}ms" -f $_.Time
+                </ScriptBlock>
               </ListItem>
               <ListItem>
                 <Label>Redirect Location</Label>
