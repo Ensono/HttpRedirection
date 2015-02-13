@@ -3,6 +3,7 @@ $sut = (Split-Path -Leaf $MyInvocation.MyCommand.Path).Replace('.Tests.', '.');
 $mockTable = @{};
 . "$here\$sut"
 
+$invokeWebRequestRedirectOnFinalSite = { ($Uri -eq 'http://final.site.test/301') -And ($MaximumRedirection -eq 0) };
 $invokeWebRequestFinalSite = { ($Uri -eq 'http://final.site.test/') -And ($MaximumRedirection -eq 0) };
 $invokeWebRequestMovedPermanentlySite = { ($Uri -eq 'http://301.site.test/') -And ($MaximumRedirection -eq 0) };
 $invokeWebRequestFoundSite = { ($Uri -eq 'http://302.site.test/') -And ($MaximumRedirection -eq 0) };
@@ -327,5 +328,40 @@ Describe 'Trace-HttpRedirect completes after a single call to a terminating endp
 		$output = Trace-HttpRedirect -Uri 'http://final.site.test/';
 		$output | Measure-Object | Select-Object -ExpandProperty Count | Should Be 1;
 		Assert-VerifiableMocks;
+	}
+
+	It 'returns after one call which returns a 500-Internal Server Error.' {
+		Mock -Verifiable -CommandName Invoke-WebRequest `
+			-ParameterFilter $invokeWebRequestFinalSite `
+			-MockWith { throw (New-WebException -Message 'Test WebException' -StatusCode 'InternalServerError' -StatusDescription 'Internal Server Error' ) };
+
+		$output = Trace-HttpRedirect -Uri 'http://final.site.test/';
+		$output | Measure-Object | Select-Object -ExpandProperty Count | Should Be 1;
+		Assert-VerifiableMocks;
+	}
+}
+
+Describe 'Trace-HttpRedirection calls to URL which returns a 301-Permanenent Redirect to a relative URL which returns 200-OK.' {
+	Mock -Verifiable -CommandName Invoke-WebRequest `
+		-ParameterFilter $invokeWebRequestRedirectOnFinalSite `
+		-MockWith { return [String]::Empty | Select-Object @{ Name='StatusCode'; Expression={ '308' } }, @{ Name='StatusDescription'; Expression={ 'Permanenent Redirect' } } , @{ Name='Headers'; Expression={ return @{ 'Location'='/' } } } };
+
+	Mock -Verifiable -CommandName Invoke-WebRequest `
+		-ParameterFilter $invokeWebRequestFinalSite `
+		-MockWith { return [String]::Empty | Select-Object @{ Name='StatusCode'; Expression={ '200' } }, @{ Name='StatusDescription'; Expression={ 'OK' } } };
+
+	It 'Returns a two objects.' {
+		$output = Trace-HttpRedirect -Uri 'http://final.site.test/301';
+		$output | Measure-Object | Select-Object -ExpandProperty Count | Should Be 2;
+	}
+
+	It 'Calls Invoke-WebRequest with Redirect On Final Site URL' {
+		Assert-MockCalled Invoke-WebRequest `
+			-ParameterFilter $invokeWebRequestRedirectOnFinalSite;
+	}
+
+	It 'Calls Invoke-WebRequest with final site URL' {
+		Assert-MockCalled Invoke-WebRequest `
+			-ParameterFilter $invokeWebRequestFinalSite;
 	}
 }

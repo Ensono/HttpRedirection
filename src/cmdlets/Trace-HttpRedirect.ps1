@@ -9,11 +9,23 @@ function Trace-HttpRedirect {
     [switch]$ForceGet
   )
   process {
+    $previousUri = $null;
+
+    if ($ForceGet) {
+      $method = 'GET';
+    } else {
+      $method = 'HEAD';
+    }
+
+    Write-Debug ("Invoking HTTP Trace of {0} using the {1} method." -f $Uri, $method)
+
     for ($redirect = 1; $redirect -le $MaximumRedirection; $redirect++) {
-      if ($ForceGet) {
-        $method = 'GET';
-      } else {
-        $method = 'HEAD';
+
+      # Handle relative URIs being returned in the Location Header by
+      # converting them into absolute URIs based upon the previous URI.
+      $relativeUri = [Uri]$null;
+      if ($previousUri -And [System.Uri]::TryCreate([String]$Uri, [UriKind]::Relative, [ref]$relativeUri)) {
+        $Uri = New-Object System.Uri -ArgumentList @($previousUri, $relativeUri);
       }
 
       try {
@@ -30,6 +42,7 @@ function Trace-HttpRedirect {
       $redirectObject | Add-Member -MemberType NoteProperty -Name 'StatusDescription' -Value $result.StatusDescription;
 
       if ($result.PSObject.Properties['Headers'] -And ($result.Headers['Location'] -ne $null)) {
+        $previousUri = $Uri;
         $Uri = $result.Headers['Location'];
         $redirectObject | Add-Member -MemberType NoteProperty -Name 'Location' -Value $Uri;
       }
