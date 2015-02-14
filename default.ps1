@@ -1,7 +1,7 @@
 Task default -Depends Test
 
 Task BuildOutputDirectory -PreCondition { -Not (Test-Path '.\build\output') } {
-  New-Item -Path '.\build\output' -Type Container;
+  New-Item -Path '.\build\output' -Type Container -Force | Out-Null;
 }
 
 Task Test -Depends BuildOutputDirectory {  
