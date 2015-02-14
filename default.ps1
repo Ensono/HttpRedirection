@@ -10,7 +10,25 @@ Task Test -Depends BuildOutputDirectory {
   Invoke-Pester -OutputFile 'build/output/Test-Results.xml' -OutputFormat NUnitXml -ExcludeTag 'Integration' ".\src\";
 }
 
-Task Package -Depends Test, BuildOutputDirectory {
+Task UpdateVersion -PreCondition { Test-Path Env:\APPVEYOR_BUILD_NUMBER } {
+  if (Test-Path '.\src\HttpRedirection-temp.psd1') {
+    Remove-Item '.\src\HttpRedirection-temp.psd1' -Force | Out-Null;
+  }
+
+  Get-Content .\src\HttpRedirection.psd1 `
+    | ForEach-Object { 
+      if ($_.Contains('ModuleVersion = ')) {
+        "ModuleVersion = '1.1.0.{0}'" -f $env:APPVEYOR_BUILD_NUMBER;
+      } else {
+        $_
+      }
+    } | Out-File -Append .\src\HttpRedirection-temp.psd1;
+
+  Remove-Item '.\src\HttpRedirection.psd1';
+  Move-Item '.\src\HttpRedirection-temp.psd1' '.\src\HttpRedirection.psd1';
+}
+
+Task Package -Depends Test, BuildOutputDirectory, UpdateVersion {
   $SourceDirectory = Resolve-Path '.\src\';
   $PackageFile = '{0}/build/output/HttpRedirection.zip' -f $PSScriptRoot;
   if (Test-Path $PackageFile) {

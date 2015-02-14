@@ -12,7 +12,7 @@
 RootModule = 'HttpRedirection.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.0'
+ModuleVersion = '1.1.0.0'
 
 # ID used to uniquely identify this module
 GUID = '1c62bcca-19e7-48aa-b6f3-43b235a867af'
